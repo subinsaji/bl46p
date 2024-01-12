@@ -1,7 +1,7 @@
 # default values for all IOCs on bl38p
 # see end of file for values that may be overridden per individual IOC
 
-beamline: bl38p
+beamline: bl46p
 # we use the default service account in the namespace so leave this out
 # if you need to specify an alternative then uncomment below
 # serviceAccountName: k8s-p38-iocs
@@ -14,7 +14,7 @@ hostNetwork: true
 # Not using this now that we have cluster per beamline
 # However if you are using one cluster for multiple beamlines / domains
 # Then label the local nodes for each beamline and switch to true
-useAffinity: false
+useAffinity: true
 
 # root folder for ioc source/binaries inside generic IOC container
 iocFolder: /epics/ioc
@@ -40,8 +40,8 @@ securityContext:
   allowPrivilegeEscalation: false
   # IMPORTANT if you want access to /dls/p38/data then the following should
   # be set to p38detector account ID and group ID
-  # runAsUser: 37143
-  # runAsGroup: 37143
+  runAsUser: 37143
+  runAsGroup: 37143
   # capabilities:
   #   drop:
   #   - ALL
@@ -63,18 +63,18 @@ ioc_version:
 # the PVC
 dataVolume:
   # Create a PVC called {{ .Chart.Name }}-data when true
-  pvc: true
+  pvc: false
   # A path on the host machine to write data into. Also used as the path that the
   # pvc or hostPath will be mounted at so that users need not be confused about
   # inside/outside container paths.
-  hostPath: /data/
+  hostPath: /data/temp
 
 # use the shared PVC for publishing opi files over http (see services/opis)
-opisClaim:
+opisClaim: bl46p-opi-claim
 # use the shared PVC for publishing opi files over http (see services/opis)
-runtimeClaim:
+runtimeClaim: bl46p-runtime-claim
 # use the shared PVC autosave files (comment out for no autosave)
-autosaveClaim:
+autosaveClaim: bl46p-autosave-claim
 
 # default resource limits
 resources:
@@ -84,3 +84,9 @@ resources:
   requests:
     cpu: 100m
     memory: 64Mi
+
+tolerations:
+  - key: nodetype
+    operator: "Equal"
+    value: training-rig
+    effect: "NoSchedule"
