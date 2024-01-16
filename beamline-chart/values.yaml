@@ -40,8 +40,8 @@ securityContext:
   allowPrivilegeEscalation: false
   # IMPORTANT if you want access to /dls/p38/data then the following should
   # be set to p38detector account ID and group ID
-  runAsUser: 37143
-  runAsGroup: 37143
+  runAsUser: 37890
+  runAsGroup: 37890
   # capabilities:
   #   drop:
   #   - ALL
